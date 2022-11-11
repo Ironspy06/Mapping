@@ -3,6 +3,21 @@ import numpy as np
 import KeyPressModule as kp
 from time import sleep
 import random
+config = {
+  "apiKey": "AIzaSyCjULZ1FxzQHvMji5OR-OZnyOxY9KwV_GA",
+  "authDomain": "robot-68d4d.firebaseapp.com",
+  "databaseURL": "https://robot-68d4d-default-rtdb.firebaseio.com",
+  "projectId": "robot-68d4d",
+  "storageBucket": "robot-68d4d.appspot.com",
+  "messagingSenderId": "1071151697658",
+  "appId": "1:1071151697658:web:635787e41378b95fa54343",
+  "measurementId": "G-42522D1CWQ"
+}
+
+firebase=pyrebase.initialize_app(config)
+
+db=firebase.database()
+#parameters
 #parameters
 fspeed=117/10 #forward speed in cm/s  (15 cm/s)
 aspeed=360/10
