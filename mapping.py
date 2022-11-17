@@ -23,8 +23,7 @@ y = 500
 points = [(0, 0), (0, 0)]
 
 points1 = [(0, 0), (0, 0)]
-points2 = [(0, 0), (0, 0)]
-points3 = [(0, 0), (0, 0)]
+
 # a=0
 movement = [0]
 flag = -1
@@ -35,12 +34,11 @@ flag4 = -1
 flag5 = -1
 x1 = 0
 y1 = 0
-x2, y2, x3, y3 = 0, 0, 0, 0
+
 
 
 def Movement():
-    global x, y, x1, y1, x2, y2, flag1, flag, flag2, flag3, flag4, flag5
-    global x3, y3
+    global x, y, x1, y1, flag1, flag, flag2, flag3, flag4, flag5
     orient1 = db.child('Motion').child('Orientation').get()
     #UltraSonic = db.child('Motion').child('US').get()
     if orient1.val() == 1:  # forward
@@ -48,21 +46,20 @@ def Movement():
         if orient1.val() != flag1:
             movement.append(orient1.val())
             flag1 = orient1.val()
-        print(movement)
 
         if movement[-2] == 3:
-            x2 = x - 10
-            y2 = y
+            x1 = x - 10
+            y1 = y
             movement.pop(1)
             flag = -1
         if movement[-2] == 4:
-            x2 = x + 10
-            y2 = y
+            x1 = x + 10
+            y1 = y
             movement.pop(1)
             flag3 = -1
         if movement[-2] == 2:
-            x2 = x
-            y2 = y + 10
+            x1 = x
+            y1 = y + 10
             movement.pop(1)
             flag5 = -1
         y -= 10
@@ -71,18 +68,18 @@ def Movement():
             movement.append(orient1.val())
             flag5 = orient1.val()
             if movement[-2] == 3:
-                x3 = x - 10
-                y3 = y
+                x1 = x - 10
+                y1 = y
                 movement.pop(1)
                 flag = -1
             if movement[-2] == 4:
-                x3 = x + 10
-                y3 = y
+                x1 = x + 10
+                y1 = y
                 movement.pop(1)
                 flag3 = -1
             if movement[-2] == 1:
-                x3 = x
-                y3 = y - 10
+                x1 = x
+                y1 = y - 10
                 movement.pop(1)
                 flag1 = -1
         y += 10
@@ -95,22 +92,16 @@ def Movement():
         if movement[-2] == 1:
             x1 = x
             y1 = y - 10
-            print("X and y values")
-            print(x1, y1)
             movement.pop(1)
             flag1 = -1
         if movement[-2] == 2:
             x1 = x
             y1 = y + 10
-            print("X and y values")
-            print(x1, y1)
             movement.pop(1)
             flag5 = -1
         if movement[-2] == 4:
             x1 = x + 10
             y1 = y
-            print("X and y values")
-            print(x1, y1)
             movement.pop(1)
             flag3 = -1
         x -= 10
@@ -123,22 +114,16 @@ def Movement():
         if movement[-2] == 1:
             x1 = x
             y1 = y - 10
-            print("X and y values")
-            print(x1, y1)
             movement.pop(1)
             flag1 = -1
         if movement[-2] == 2:
             x1 = x
             y1 = y + 10
-            print("X and y values")
-            print(x1, y1)
             movement.pop(1)
             flag5 = -1
         if movement[-2] == 3:
             x1 = x - 10
             y1 = y
-            print("X and y values")
-            print(x1, y1)
             movement.pop(1)
             flag = -1
 
@@ -147,7 +132,7 @@ def Movement():
         x += 0
         y += 0
 
-    return [x, y, x1, y1, x2, y2, x3, y3]
+    return [x, y, x1, y1]
 
 
 def automaticMovement():
@@ -164,6 +149,12 @@ def drawObj(img2, points2):
         cv.circle(img2, point, 8, (255, 0, 0), cv.FILLED)
 
 
+
+def text(img2,points2):
+    for i in range(2,len(points2)):
+
+        cv.putText(img2, f'({(points2[i][0] - 500) / 100},{-(points2[i][1] - 500) / 100})m',
+                   (points2[i][0] + 10, points2[i][1] + 30), cv.FONT_HERSHEY_PLAIN, 1, (255, 0, 255), 1)
 def drawPoints(img1, Points1):
     for point in Points1:
         cv.circle(img1, point, 5, (0, 0, 255), cv.FILLED)
@@ -185,17 +176,18 @@ while True:
     #     points.append((vals[0], vals[1]))
     if (points1[-1][0] != vals2[2] or points1[-1][1] != vals2[3]):
         points1.append((vals2[2], vals2[3]))
-    if (points2[-1][0] != vals2[4] or points2[-1][1] != vals2[5]):
-        points2.append((vals2[4], vals2[5]))
-    if (points3[-1][0] != vals2[6] or points3[-1][1] != vals2[7]):
-        points3.append((vals2[6], vals2[7]))
+    # for i in range(0,len(points)-1):
+    #     if points[-1][0]!=points[i][0] and points[-1][0]!=points[i][0]:
+    #         print("Valid Points")
+
+
     drawPoints(img, points)
     drawObj(img, points1)
-    drawObj(img, points2)
-    drawObj(img, points3)
+    text(img,points1)
 
-    print(points1)
-    print(points2)
-    print(points3)
+    print(points)
+
     cv.imshow("Output", img)
     cv.waitKey(1)
+
+
